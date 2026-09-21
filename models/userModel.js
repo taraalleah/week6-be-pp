@@ -4,31 +4,35 @@ const validator = require("validator");
 
 const userSchema = mongoose.Schema(
   {
-    name: {
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    phone_number: {
       type: String,
-      required: [true, "Please add a name"],
+      required: true,
+      match: /^\d{10,}$/ // Must be at least 10 digits
     },
-    email: {
+    gender: {
       type: String,
-      required: [true, "Please add an email"],
-      unique: true,
+      required: true,
+      enum: ["Male", "Female", "Other"]
     },
-    password: {
+    date_of_birth: { type: Date, required: true },
+    membership_status: {
       type: String,
-      required: [true, "Please add a password"],
+      required: true,
+      enum: ["Active", "Inactive", "Suspended"]
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
-
-
+const status = ["Active", "Inactive", "Suspended"]
+const gen = ["Male", "Female", "Other"]
 
 // static signup method
-userSchema.statics.signup = async function (name, email, password) {
+userSchema.statics.signup = async function (name, email, password, phone_number, gender, date_of_birth, membership_status) {
   // validation
-  if ((!name, !email || !password)) {
+  if ((!name || !email || !password || !phone_number || !gender || !date_of_birth || !membership_status)) {
     throw Error("Please add all fields");
   }
   if (!validator.isEmail(email)) {
@@ -37,7 +41,18 @@ userSchema.statics.signup = async function (name, email, password) {
   if (!validator.isStrongPassword(password)) {
     throw Error("Password not strong enough");
   }
-
+  if (!validator.isDate(date_of_birth)) {
+    throw Error("Ensure date format is correct e.g. YYYY-MM-DD")
+  }
+  if (!phone_number.match(/^\d{10,}$/)) {
+    throw Error("10+ digits please!")
+  }
+  if (!status.includes(membership_status)) {
+    throw Error("Not a valid status")
+  }
+  if (!gen.includes(gender)) {
+    throw Error("Not valid gender")
+  }
   const userExists = await this.findOne({ email });
 
   if (userExists) {
@@ -51,18 +66,22 @@ userSchema.statics.signup = async function (name, email, password) {
     name,
     email,
     password: hashedPassword,
+    phone_number,
+    gender,
+    date_of_birth,
+    membership_status
   });
 
   return user;
 };
 
 // static login method
-userSchema.statics.login = async function (email, password) {
-  if (!email || !password) {
+userSchema.statics.login = async function (email, password, phone_number, gender, date_of_birth, membership_status) {
+  if (!name, !email || !password || !phone_number || !gender || !date_of_birth || !membership_status) {
     throw Error("All fields must be filled");
   }
 
-  const user = await this.findOne({ email });
+  const user = await this.findOne({ email, token, password, phone_number, gender, date_of_birth, membership_status });
   if (!user) {
     throw Error("Incorrect email");
   }

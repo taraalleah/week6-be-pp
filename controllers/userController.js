@@ -12,10 +12,10 @@ const generateToken = (_id) => {
 // @route   POST /api/users/signup
 // @access  Public
 const signupUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, phone_number, gender, date_of_birth, membership_status } = req.body;
 
   try {
-    const user = await User.signup(name, email, password);
+    const user = await User.signup(name, email, password, phone_number, gender, date_of_birth, membership_status);
 
     // create a token
     const token = generateToken(user._id);
@@ -37,7 +37,7 @@ const loginUser = async (req, res) => {
     if (user) {
       // create a token
       const token = generateToken(user._id);
-      res.status(200).json({ email, token });
+      res.status(200).json({ email, token, phone_number, gender, date_of_birth, membership_status });
     } else {
       res.status(400);
       throw new Error("Invalid credentials");
