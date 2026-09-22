@@ -37,7 +37,14 @@ const loginUser = async (req, res) => {
     if (user) {
       // create a token
       const token = generateToken(user._id);
-      res.status(200).json({ email, token, phone_number, gender, date_of_birth, membership_status });
+      const name = user.name
+      const gender = user.gender
+      const date_of_birth = user.date_of_birth
+      const membership_status = user.membership_status
+      const phone_number = user.phone_number
+      const password = user.password
+
+      res.status(200).json({ email, token, name, gender, date_of_birth, membership_status, phone_number, password });
     } else {
       res.status(400);
       throw new Error("Invalid credentials");

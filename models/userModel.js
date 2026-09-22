@@ -76,12 +76,12 @@ userSchema.statics.signup = async function (name, email, password, phone_number,
 };
 
 // static login method
-userSchema.statics.login = async function (email, password, phone_number, gender, date_of_birth, membership_status) {
-  if (!name, !email || !password || !phone_number || !gender || !date_of_birth || !membership_status) {
+userSchema.statics.login = async function (email, password) {
+  if (!email || !password) {
     throw Error("All fields must be filled");
   }
 
-  const user = await this.findOne({ email, token, password, phone_number, gender, date_of_birth, membership_status });
+  const user = await this.findOne({ email });
   if (!user) {
     throw Error("Incorrect email");
   }
