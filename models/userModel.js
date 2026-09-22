@@ -35,12 +35,12 @@ userSchema.statics.signup = async function (name, email, password, phone_number,
   if ((!name || !email || !password || !phone_number || !gender || !date_of_birth || !membership_status)) {
     throw Error("Please add all fields");
   }
-  if (!validator.isEmail(email)) {
-    throw Error("Email not valid");
-  }
-  if (!validator.isStrongPassword(password)) {
-    throw Error("Password not strong enough");
-  }
+  // if (!validator.isEmail(email)) {
+  //   throw Error("Email not valid");
+  // }
+  // if (!validator.isStrongPassword(password)) {
+  //   throw Error("Password not strong enough");
+  // }
   if (!validator.isDate(date_of_birth)) {
     throw Error("Ensure date format is correct e.g. YYYY-MM-DD")
   }
